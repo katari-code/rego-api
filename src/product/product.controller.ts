@@ -16,7 +16,8 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { StatusGuard } from '../auth/guards/status.guard';
 import { ProductQueryDto } from './dto/query.dto';
-import { PaginationQueryDto } from 'src/util/query.dto';
+import { PaginationQueryDto } from '../util/query.dto';
+import { Product } from '@prisma/client';
 
 @Controller({ path: 'product', version: '1' })
 @UseGuards(JwtAuthGuard, RolesGuard, StatusGuard)
@@ -24,7 +25,7 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
+  create(@Body() createProductDto: CreateProductDto): Promise<Product> {
     return this.productService.create(createProductDto);
   }
   @Get()
@@ -32,22 +33,24 @@ export class ProductController {
     @Query() productQueryDto: ProductQueryDto,
     @Query() paginationQueryDto: PaginationQueryDto,
   ) {
-    console.log(productQueryDto);
     return this.productService.findMany(productQueryDto, paginationQueryDto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id') id: number): Promise<Product> {
     return this.productService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateProductDto: UpdateProductDto) {
+  update(
+    @Param('id') id: number,
+    @Body() updateProductDto: UpdateProductDto,
+  ): Promise<Product> {
     return this.productService.update(id, updateProductDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
+  remove(@Param('id') id: number): Promise<Product> {
     return this.productService.remove(id);
   }
 }

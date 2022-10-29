@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 import { ModuleRef } from '@nestjs/core';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
@@ -14,7 +14,7 @@ export class AuthService implements OnModuleInit {
     this.userService = this.moduleRef.get(UserService, { strict: false });
   }
 
-  async validateUser(email: string, password: string) {
+  async validateUser(email: string, password: string): Promise<User | boolean> {
     const user = await this.userService.getUserByEmail(email);
     if (!user) {
       return false;
@@ -25,7 +25,7 @@ export class AuthService implements OnModuleInit {
     }
     return user;
   }
-  async login(user: User) {
+  async login(user: User): Promise<{ access_token: string }> {
     const payload = {
       email: user.email,
       role: user.role,
@@ -37,7 +37,7 @@ export class AuthService implements OnModuleInit {
     };
   }
 
-  async register(user: CreateUserDto) {
+  async register(user: CreateUserDto): Promise<{ access_token: string }> {
     const salt = await bcrypt.genSalt();
     user.password = await bcrypt.hash(user.password, salt);
     const newUser = await this.userService.create(user);

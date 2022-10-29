@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { PaginationQueryDto } from 'src/util/query.dto';
+import { Product } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+import { PaginationQueryDto } from '../util/query.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductQueryDto } from './dto/query.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -15,7 +16,7 @@ export class ProductService {
   findMany(
     productQueryDto: ProductQueryDto,
     paginationQueryDto: PaginationQueryDto,
-  ) {
+  ): Promise<Product[]> {
     return this.prismaService.product.findMany({
       skip: paginationQueryDto.skip ?? undefined,
       take: paginationQueryDto.take ?? undefined,
@@ -23,18 +24,18 @@ export class ProductService {
     });
   }
 
-  findOne(id: number) {
+  findOne(id: number): Promise<Product> {
     return this.prismaService.product.findUnique({ where: { id } });
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
+  update(id: number, updateProductDto: UpdateProductDto): Promise<Product> {
     return this.prismaService.product.update({
       data: updateProductDto,
       where: { id },
     });
   }
 
-  remove(id: number) {
+  remove(id: number): Promise<Product> {
     return this.prismaService.product.delete({ where: { id } });
   }
 }

@@ -6,7 +6,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -23,14 +23,16 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('logout')
-  getProfile() {
+  getProfile(): { access_token: null } {
     return {
       access_token: null,
     };
   }
 
   @Post('register')
-  async register(@Body() createUserDto: CreateUserDto) {
+  async register(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<{ access_token: string }> {
     return this.authService.register(createUserDto);
   }
 }

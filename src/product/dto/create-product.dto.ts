@@ -1,6 +1,7 @@
 import {
   ArrayMinSize,
   IsArray,
+  IsInt,
   IsNotEmpty,
   IsNumber,
   IsString,
@@ -25,6 +26,6 @@ export class CreateProductDto {
   imges: string[];
 
   @IsNotEmpty()
-  @IsNumber()
-  warehouseId;
+  @IsInt()
+  warehouseId: number;
 }

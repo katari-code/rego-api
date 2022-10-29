@@ -19,6 +19,7 @@ model User {
   status    Status
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+  deleted   Boolean  @default(false)
 }
 
 model Product {
@@ -31,6 +32,7 @@ model Product {
   warehouseId Int
   createdAt   DateTime   @default(now()) @map("created_at")
   updatedAt   DateTime   @updatedAt @map("updated_at")
+  deleted     Boolean    @default(false)
 }
 
 model Warehouse {
@@ -42,6 +44,7 @@ model Warehouse {
   products    Product[]
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
+  deleted     Boolean   @default(false)
 }
 
 enum Role {
@@ -54,5 +57,4 @@ enum Status {
   APPROVED
   REJECTD
   SUSPEND
-  DELETED
 }
